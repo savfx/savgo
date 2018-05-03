@@ -14,6 +14,13 @@ const (
   HyphenType
 )
 
+var StringToCaseType = map[string]CaseType{
+  "camel": CamelType,
+  "snake": SnakeType,
+  "pascal": PascalType,
+  "hyphen": HyphenType,
+}
+
 func Lcfirst(str string) string {
   return strings.ToLower(str[0: 1]) + str[1:len(str)]
 }
@@ -57,6 +64,14 @@ func Convert(str string, caseType CaseType) string {
     default:
       return str
   }
+}
+
+func ConvertStringType(str string, caseTypeStr string) string {
+  _, ok := StringToCaseType[caseTypeStr]
+  if ok {
+    return Convert(str, StringToCaseType[caseTypeStr])
+  }
+  return str
 }
 
 var camelRegexp = regexp.MustCompile(`[-_](\w)`)
