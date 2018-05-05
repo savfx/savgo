@@ -12,7 +12,7 @@ import (
 	"crypto/subtle"
 	"errors"
 	"fmt"
-	"github.com/savgo/sav-util/blowfish"
+	"github.com/savfx/savgo/util/blowfish"
 	"io"
 	"strconv"
 )

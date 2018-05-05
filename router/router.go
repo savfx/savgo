@@ -1,9 +1,8 @@
 package router
 
 import (
-  "github.com/savgo/sav-util/strcase"
+  "github.com/savfx/savgo/util/strcase"
   "github.com/tidwall/gjson"
-  "github.com/jetiny/route"
   "regexp"
   "strings"
 )
@@ -54,7 +53,7 @@ type ModalRoute struct {
   Path string
   Opts gjson.Result
   Childs map[Method][]*ActionRoute
-  route route.Route
+  route Route
 }
 
 type ActionRoute struct {
@@ -63,7 +62,7 @@ type ActionRoute struct {
   Method Method
   Opts gjson.Result
   Modal *ModalRoute
-  Route route.Route
+  Route Route
 }
 
 type Router struct {
@@ -173,7 +172,7 @@ func (router * Router) createModalRoute(opts gjson.Result, name string) {
   }
   modalRoute.Path = normalPath("/" + modalRoute.Path);
   // 生成路由
-  modalRoute.route = route.Parse(modalRoute.Path, &route.ParseOption{
+  modalRoute.route = Parse(modalRoute.Path, &ParseOption{
     End: false,
     Sensitive: router.opts.Sensitive,
   })
@@ -243,7 +242,7 @@ func (router * Router) createActionRoute (opts gjson.Result, name string, modalN
   actionRoute.Path = path
   actionRoute.Modal = modal
   // 生成路由
-  actionRoute.Route = route.Parse(path, &route.ParseOption{
+  actionRoute.Route = Parse(path, &ParseOption{
     End: true,
     Strict: false,
     Sensitive: router.opts.Sensitive,

@@ -1,7 +1,7 @@
 package passwd
 
 import (
-	"github.com/savgo/sav-util/bcrypt"
+	"github.com/savfx/savgo/util/bcrypt"
 )
 
 // DefaultCost is the base 2 logarithm of the Bcrypt work factor
