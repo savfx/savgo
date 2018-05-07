@@ -1,7 +1,6 @@
 package convert
 
 import (
-	"fmt"
 	"github.com/a8m/expect"
 	"testing"
 )
@@ -18,7 +17,7 @@ func TestString(t *testing.T) {
 	expect(*StringPtr(38881455555.555)).To.Equal("38881455555.555")
 	expect(*StringPtr(true)).To.Equal("true")
 	expect(*StringPtr(false)).To.Equal("false")
-	fmt.Println()
+	expect(nil == StringPtr(nil)).To.Equal(true)
 }
 
 func TestBool(t *testing.T) {
@@ -32,6 +31,7 @@ func TestBool(t *testing.T) {
 	expect(*BoolPtr(0)).To.Equal(false)
 	expect(*BoolPtr(0.0000000000000000000001)).To.Equal(true)
 	expect(*BoolPtr(0.0000000000000000000000)).To.Equal(false)
+	expect(nil == BoolPtr(nil)).To.Equal(true)
 }
 
 func TestInt(t *testing.T) {
@@ -105,9 +105,4 @@ func TestFloat(t *testing.T) {
 	expect(0.0000000000000000000001 == *Float64Ptr("0.0000000000000000000001")).To.Equal(true)
 	expect(0 == *Float64Ptr("0.0000000000000000000000")).To.Equal(true)
 
-	// type StringList []*string
-	// var strList StringList = make([]*string, 0)
-	// str := "sss"
-	// strList = append(strList, &str)
-	// fmt.Println(*strList[0])
 }
