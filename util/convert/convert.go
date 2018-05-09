@@ -38,7 +38,7 @@ func StringPtr(value interface{}) *string {
 	case float32:
 		res = strconv.FormatFloat(float64(val), 'f', -1, 64)
 	case float64:
-		res = strconv.FormatFloat(float64(val), 'f', -1, 64)
+		res = strconv.FormatFloat(val, 'f', -1, 64)
 	case []byte:
 		res = string(val)
 	default:
