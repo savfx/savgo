@@ -11,7 +11,9 @@ func TestParse(t *testing.T) {
   // m, _ := Parse("a+=b&c=d&c=e&x[bbc=2&x[bbc=3")
   // expect(len(m) >=0).To.Equal(true)
   // fmt.Println(m, len(m))
-  m, _ := Parse("a[b][c]=d&a[][c]=d&a[b][]=d")
+  // m, _ := Parse("a[b][c]=d&a[m][c]=d&a[b][d]=d&x[]=y")
+  // m, _ := Parse("a[b][c]=d&a[b][f]=e")
+  m, _ := Parse("a[][d]=d")
   expect(len(m) >=0).To.Equal(true)
   fmt.Println(m, len(m))
 }
