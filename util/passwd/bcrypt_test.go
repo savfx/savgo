@@ -150,7 +150,7 @@ func TestVectors(t *testing.T) {
 
 			isCurrent, err := IsCurrent(encoded)
 			if err != nil {
-				t.Errorf("%d-%d: IsCurrent: unexpected failure: %", i, j, err)
+				t.Errorf("%d-%d: IsCurrent: unexpected failure: %s", i, j, err)
 				continue
 			}
 			if isCurrent != pair.answer {
