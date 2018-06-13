@@ -52,3 +52,14 @@ func TestLengthChecker(t *testing.T) {
 	expect(checker.Exec(func() { checker.Llt(len(arr), 0) }) != nil).To.Equal(true)
 	expect(checker.Exec(func() { checker.Llte(len(arr), 0) }) != nil).To.Equal(true)
 }
+
+func TestContext(t *testing.T) {
+	expect := expect.New(t)
+	ctx := &Checker{}
+	expect(ctx.Path()).To.Equal("")
+	ctx.Field("fieldA", "hello")
+	ctx.Index(1)
+	ctx.Field("fieldB", "hello")
+	expect(len(ctx.Paths)).To.Equal(3)
+	expect(ctx.Path()).To.Equal("fieldA.1.fieldB")
+}
