@@ -7,7 +7,7 @@ import (
 )
 
 func Encode(value map[string]interface{}) string {
-	arr := []string{}
+	arr := make([]string, 0)
 	if value != nil {
 		for name, val := range value {
 			buildParams(url.QueryEscape(name), val, &arr)

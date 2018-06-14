@@ -1,34 +1,34 @@
 package convert
 
 type ArrayAccess struct {
-  data []interface{}
-  valueAccess ValueAccess
+	data        []interface{}
+	valueAccess ValueAccess
 }
 
 func NewArrayAccess(data []interface{}) (*ArrayAccess) {
-  return &ArrayAccess{data, ValueAccess{}}
+	return &ArrayAccess{data, ValueAccess{}}
 }
 
-func (self ArrayAccess) Len() int {
-  return len(self.data)
+func (ctx ArrayAccess) Len() int {
+	return len(ctx.data)
 }
 
-func (self * ArrayAccess) Set(data []interface{}) *ArrayAccess {
-  self.data = data
-  return self
+func (ctx *ArrayAccess) Set(data []interface{}) *ArrayAccess {
+	ctx.data = data
+	return ctx
 }
 
-func (self ArrayAccess) Field(index int) (*ValueAccess) {
-  if index < 0 || index >= len(self.data) {
-    return self.valueAccess.Set(nil)
-  }
-  return self.valueAccess.Set(self.data[index])
+func (ctx ArrayAccess) Field(index int) (*ValueAccess) {
+	if index < 0 || index >= len(ctx.data) {
+		return ctx.valueAccess.Set(nil)
+	}
+	return ctx.valueAccess.Set(ctx.data[index])
 }
 
-func (self ArrayAccess) ForEach(callback func( int, *ValueAccess)(bool)) {
-  for index, val := range self.data {
-    if !callback(index, self.valueAccess.Set(val)) {
-      return
-    }
-  }
+func (ctx ArrayAccess) ForEach(callback func(int, *ValueAccess) (bool)) {
+	for index, val := range ctx.data {
+		if !callback(index, ctx.valueAccess.Set(val)) {
+			return
+		}
+	}
 }

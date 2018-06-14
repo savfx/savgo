@@ -5,42 +5,43 @@ import (
 	"strconv"
 	"strings"
 )
+
 /*
  * 验证器
  */
 
 type Checker struct {
-	Paths []string
-	Msgs []string
+	Paths    []string
+	Messages []string
 }
 
-type Checkable interface {
-	Check (t* Checker) error
+type CheckHandler interface {
+	Check(t *Checker) error
 }
 
-func (self *Checker) Ensure(v bool) *Checker {
+func (ctx *Checker) Ensure(v bool) *Checker {
 	if v {
-		return self
+		return ctx
 	}
 	panic(ErrIsNil)
 }
 
-func (self *Checker) NotNull(v interface{}) *Checker {
+func (ctx *Checker) NotNull(v interface{}) *Checker {
 	if v != nil {
 		rv := reflect.ValueOf(v)
 		switch rv.Kind() {
 		case reflect.Ptr:
 			if !rv.IsNil() {
-				return self
+				return ctx
 			}
 		default:
-			return self
+			return ctx
 		}
 	}
 	panic(ErrIsNil)
 }
 
-func (self *Checker) Exec(callback func()) (er error) {
+func (ctx *Checker) Exec(callback func()) (er error) {
 	defer (func() {
 		if err := recover(); err != nil {
 			er = err.(error)
@@ -50,43 +51,43 @@ func (self *Checker) Exec(callback func()) (er error) {
 	return er
 }
 
-func (self *Checker) Check(checkable Checkable) *Checker {
-	err := checkable.Check(self)
-	if (err != nil) {
+func (ctx *Checker) Check(handler CheckHandler) *Checker {
+	err := handler.Check(ctx)
+	if err != nil {
 		panic(err)
 	}
-	return self
+	return ctx
 }
 
-func (self *Checker) Field(field string, msg string) *Checker {
-	self.Paths = append(self.Paths, field)
-	self.Msgs = append(self.Msgs, msg)
-	return self
+func (ctx *Checker) Field(field string, msg string) *Checker {
+	ctx.Paths = append(ctx.Paths, field)
+	ctx.Messages = append(ctx.Messages, msg)
+	return ctx
 }
 
-func (self *Checker) Message(msg string) *Checker {
-	size := len(self.Paths)
+func (ctx *Checker) Message(msg string) *Checker {
+	size := len(ctx.Paths)
 	if size > 0 {
-		self.Msgs[size-1] = msg
+		ctx.Messages[size-1] = msg
 	}
-	return self
+	return ctx
 }
 
-func (self *Checker) Index(index int) *Checker {
-	self.Paths = append(self.Paths, strconv.FormatInt(int64(index), 10))
-	self.Msgs = append(self.Msgs, "")
-	return self
+func (ctx *Checker) Index(index int) *Checker {
+	ctx.Paths = append(ctx.Paths, strconv.FormatInt(int64(index), 10))
+	ctx.Messages = append(ctx.Messages, "")
+	return ctx
 }
 
-func (self *Checker) Pop() *Checker {
-	size := len(self.Paths) - 1
+func (ctx *Checker) Pop() *Checker {
+	size := len(ctx.Paths) - 1
 	if size >= 0 {
-		self.Paths = self.Paths[: size]
-		self.Msgs = self.Msgs[: size]
+		ctx.Paths = ctx.Paths[:size]
+		ctx.Messages = ctx.Messages[:size]
 	}
-	return self
+	return ctx
 }
 
-func (self Checker) Path () string {
-	return strings.Join(self.Paths, ".")
+func (ctx Checker) Path() string {
+	return strings.Join(ctx.Paths, ".")
 }

@@ -346,98 +346,98 @@ func Float64Ptr(value interface{}) *float64 {
 
 func StringVal(value interface{}) (res string) {
 	if ptr := StringPtr(value); ptr != nil {
-	  res = *ptr
+		res = *ptr
 	}
 	return
 }
 
 func BoolVal(value interface{}) (res bool) {
-  if ptr := BoolPtr(value); ptr != nil {
-    res = *ptr
-  }
-  return
+	if ptr := BoolPtr(value); ptr != nil {
+		res = *ptr
+	}
+	return
 }
 
 func IntVal(value interface{}) (res int) {
-  if ptr := IntPtr(value); ptr != nil {
-    res = *ptr
-  }
-  return
+	if ptr := IntPtr(value); ptr != nil {
+		res = *ptr
+	}
+	return
 }
 
 func UintVal(value interface{}) (res uint) {
-  if ptr := UintPtr(value); ptr != nil {
-    res = *ptr
-  }
-  return
+	if ptr := UintPtr(value); ptr != nil {
+		res = *ptr
+	}
+	return
 }
 
 func Int8Val(value interface{}) (res int8) {
-  if ptr := Int8Ptr(value); ptr != nil {
-    res = *ptr
-  }
-  return
+	if ptr := Int8Ptr(value); ptr != nil {
+		res = *ptr
+	}
+	return
 }
 
 func Uint8Val(value interface{}) (res uint8) {
-  if ptr := Uint8Ptr(value); ptr != nil {
-    res = *ptr
-  }
-  return
+	if ptr := Uint8Ptr(value); ptr != nil {
+		res = *ptr
+	}
+	return
 }
 
 func Int16Val(value interface{}) (res int16) {
-  if ptr := Int16Ptr(value); ptr != nil {
-    res = *ptr
-  }
-  return
+	if ptr := Int16Ptr(value); ptr != nil {
+		res = *ptr
+	}
+	return
 }
 
 func Uint16Val(value interface{}) (res uint16) {
-  if ptr := Uint16Ptr(value); ptr != nil {
-    res = *ptr
-  }
-  return
+	if ptr := Uint16Ptr(value); ptr != nil {
+		res = *ptr
+	}
+	return
 }
 
 func Int32Val(value interface{}) (res int32) {
-  if ptr := Int32Ptr(value); ptr != nil {
-    res = *ptr
-  }
-  return
+	if ptr := Int32Ptr(value); ptr != nil {
+		res = *ptr
+	}
+	return
 }
 
 func Uint32Val(value interface{}) (res uint32) {
-  if ptr := Uint32Ptr(value); ptr != nil {
-    res = *ptr
-  }
-  return
+	if ptr := Uint32Ptr(value); ptr != nil {
+		res = *ptr
+	}
+	return
 }
 
 func Int64Val(value interface{}) (res int64) {
-  if ptr := Int64Ptr(value); ptr != nil {
-    res = *ptr
-  }
-  return
+	if ptr := Int64Ptr(value); ptr != nil {
+		res = *ptr
+	}
+	return
 }
 
 func Uint64Val(value interface{}) (res uint64) {
-  if ptr := Uint64Ptr(value); ptr != nil {
-    res = *ptr
-  }
-  return
+	if ptr := Uint64Ptr(value); ptr != nil {
+		res = *ptr
+	}
+	return
 }
 
 func Float32Val(value interface{}) (res float32) {
-  if ptr := Float32Ptr(value); ptr != nil {
-    res = *ptr
-  }
-  return
+	if ptr := Float32Ptr(value); ptr != nil {
+		res = *ptr
+	}
+	return
 }
 
 func Float64Val(value interface{}) (res float64) {
-  if ptr := Float64Ptr(value); ptr != nil {
-    res = *ptr
-  }
-  return
+	if ptr := Float64Ptr(value); ptr != nil {
+		res = *ptr
+	}
+	return
 }

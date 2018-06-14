@@ -1,29 +1,29 @@
 package router
 
 import (
-  "testing"
-  "github.com/a8m/expect"
+	"testing"
+	"github.com/a8m/expect"
 )
 
-func TestStringPrefix (t* testing.T) {
-  expect := expect.New(t)
-  expect(stripPrefix("", "")).To.Equal("");
-  expect(stripPrefix("/", "")).To.Equal("/");
-  expect(stripPrefix("/a", "/a")).To.Equal("/");
-  expect(stripPrefix("/a/", "/a")).To.Equal("/");
-  expect(stripPrefix("/a/b", "/a")).To.Equal("/b");
-  expect(stripPrefix("/a/", "/a/")).To.Equal("/");
-  expect(stripPrefix("/a/b", "/a/")).To.Equal("/b");
+func TestStringPrefix(t *testing.T) {
+	expect := expect.New(t)
+	expect(stripPrefix("", "")).To.Equal("");
+	expect(stripPrefix("/", "")).To.Equal("/");
+	expect(stripPrefix("/a", "/a")).To.Equal("/");
+	expect(stripPrefix("/a/", "/a")).To.Equal("/");
+	expect(stripPrefix("/a/b", "/a")).To.Equal("/b");
+	expect(stripPrefix("/a/", "/a/")).To.Equal("/");
+	expect(stripPrefix("/a/b", "/a/")).To.Equal("/b");
 }
 
-func TestRouteBasic (t* testing.T) {
-  expect := expect.New(t)
-  router := Create(&RouterOptions{
-    CaseType: "camel",
-    Method: "GET",
-    Sensitive: true,
-  })
-  jsonText := `{
+func TestRouteBasic(t *testing.T) {
+	expect := expect.New(t)
+	router := Create(&Option{
+		CaseType:  "camel",
+		Method:    "GET",
+		Sensitive: true,
+	})
+	jsonText := `{
     "modals": {
       "Home": {
         "routes": {
@@ -50,28 +50,28 @@ func TestRouteBasic (t* testing.T) {
       }
     }
   }`
-  router.Load(jsonText)
+	router.Load(jsonText)
 
-  expect(router.Match("/home/default", GET).Path).To.Equal("/home/default")
-  expect(router.Match("/home/default/", GET).Path).To.Equal("/home/default")
-  expect(router.Match("/home/relativeRoute", GET).Path).To.Equal("/home/relativeRoute")
-  expect(router.Match("/home/relativeRoute/", GET).Path).To.Equal("/home/relativeRoute")
-  expect(router.Match("/absoluteRoute", GET).Path).To.Equal("/absoluteRoute")
-  expect(router.Match("/absoluteRoute/", GET).Path).To.Equal("/absoluteRoute")
-  expect(router.Match("/home/user/1", GET).Path).To.Equal("/home/user/1")
-  expect(router.Match("/home/user/1/", GET).Path).To.Equal("/home/user/1")
-  expect(router.Match("/art", GET).Path).To.Equal("/art")
-  expect(router.Match("/art/", GET).Path).To.Equal("/art")
+	expect(router.Match("/home/default", GET).Path).To.Equal("/home/default")
+	expect(router.Match("/home/default/", GET).Path).To.Equal("/home/default")
+	expect(router.Match("/home/relativeRoute", GET).Path).To.Equal("/home/relativeRoute")
+	expect(router.Match("/home/relativeRoute/", GET).Path).To.Equal("/home/relativeRoute")
+	expect(router.Match("/absoluteRoute", GET).Path).To.Equal("/absoluteRoute")
+	expect(router.Match("/absoluteRoute/", GET).Path).To.Equal("/absoluteRoute")
+	expect(router.Match("/home/user/1", GET).Path).To.Equal("/home/user/1")
+	expect(router.Match("/home/user/1/", GET).Path).To.Equal("/home/user/1")
+	expect(router.Match("/art", GET).Path).To.Equal("/art")
+	expect(router.Match("/art/", GET).Path).To.Equal("/art")
 }
 
-func TestRouteOptions (t* testing.T) {
-  expect := expect.New(t)
-  router := Create(&RouterOptions{
-    CaseType: "hyphen",
-    Method: "GET",
-    Sensitive: false,
-  })
-  jsonText := `{
+func TestRouteOptions(t *testing.T) {
+	expect := expect.New(t)
+	router := Create(&Option{
+		CaseType:  "hyphen",
+		Method:    "GET",
+		Sensitive: false,
+	})
+	jsonText := `{
     "modals": {
       "UserProfile": {}
     },
@@ -80,30 +80,30 @@ func TestRouteOptions (t* testing.T) {
       {"modal":"UserProfile", "name": "UserAddress", "path": "UserAddress"}
     ]
   }`
-  router.Load(jsonText)
-  matched := router.MatchStringMethod("/user-profile/home-info", "GET")
-  expect(matched.Route).To.Be.Ok()
+	router.Load(jsonText)
+	matched := router.MatchStringMethod("/user-profile/home-info", "GET")
+	expect(matched.Route).To.Be.Ok()
 
-  matched = router.MatchStringMethod("/user-PROFILE/HOME-info", "GET")
-  expect(matched.Route).To.Be.Ok()
+	matched = router.MatchStringMethod("/user-PROFILE/HOME-info", "GET")
+	expect(matched.Route).To.Be.Ok()
 
-  matched = router.MatchStringMethod("/user-profile/HomeInfo", "GET")
-  expect(nil == matched).To.Be.Ok()
+	matched = router.MatchStringMethod("/user-profile/HomeInfo", "GET")
+	expect(nil == matched).To.Be.Ok()
 
-  matched = router.MatchStringMethod("/UserProfile/home-info", "GET")
-  expect(nil == matched).To.Be.Ok()
+	matched = router.MatchStringMethod("/UserProfile/home-info", "GET")
+	expect(nil == matched).To.Be.Ok()
 
-  matched = router.MatchStringMethod("/UserProfile/HomeInfo", "GET")
-  expect(nil == matched).To.Be.Ok()
-  
-  matched = router.MatchStringMethod("/user-profile/UserAddress", "GET")
-  expect(matched.Route).To.Be.Ok()
+	matched = router.MatchStringMethod("/UserProfile/HomeInfo", "GET")
+	expect(nil == matched).To.Be.Ok()
+
+	matched = router.MatchStringMethod("/user-profile/UserAddress", "GET")
+	expect(matched.Route).To.Be.Ok()
 
 }
 
-func TestRouter(t * testing.T) {
-  expect := expect.New(t)
-  jsonText :=  `{
+func TestRouter(t *testing.T) {
+	expect := expect.New(t)
+	jsonText := `{
     "modals": [
       {
         "name": "UserProfile",
@@ -122,32 +122,32 @@ func TestRouter(t * testing.T) {
       }
     ]
   }`
-  var router = Create(&RouterOptions{
-    CaseType: "hyphen",
-    Method: "GET",
-    Sensitive: false,
-  })
-  router.Load(jsonText)
+	var router = Create(&Option{
+		CaseType:  "hyphen",
+		Method:    "GET",
+		Sensitive: false,
+	})
+	router.Load(jsonText)
 
-  matched := router.MatchStringMethod("/user-profile/home-info", "GET")
-  expect(matched.Route).To.Be.Ok()
+	matched := router.MatchStringMethod("/user-profile/home-info", "GET")
+	expect(matched.Route).To.Be.Ok()
 
-  matched = router.MatchStringMethod("/user-PROFILE/HOME-info", "GET")
-  expect(matched.Route).To.Be.Ok()
+	matched = router.MatchStringMethod("/user-PROFILE/HOME-info", "GET")
+	expect(matched.Route).To.Be.Ok()
 
-  matched = router.MatchStringMethod("/user-profile/HomeInfo", "GET")
-  expect(nil == matched).To.Be.Ok()
+	matched = router.MatchStringMethod("/user-profile/HomeInfo", "GET")
+	expect(nil == matched).To.Be.Ok()
 
-  matched = router.MatchStringMethod("/UserProfile/home-info", "GET")
-  expect(nil == matched).To.Be.Ok()
+	matched = router.MatchStringMethod("/UserProfile/home-info", "GET")
+	expect(nil == matched).To.Be.Ok()
 
-  matched = router.MatchStringMethod("/UserProfile/HomeInfo", "GET")
-  expect(nil == matched).To.Be.Ok()
-  
-  matched = router.MatchStringMethod("/user-profile/user-address", "NONE")
-  expect(nil == matched).To.Be.Ok()
+	matched = router.MatchStringMethod("/UserProfile/HomeInfo", "GET")
+	expect(nil == matched).To.Be.Ok()
 
-  matched = router.MatchStringMethod("/user-profile/user-address", "OPTIONS")
-  expect(matched.Route).To.Be.Ok()
+	matched = router.MatchStringMethod("/user-profile/user-address", "NONE")
+	expect(nil == matched).To.Be.Ok()
+
+	matched = router.MatchStringMethod("/user-profile/user-address", "OPTIONS")
+	expect(matched.Route).To.Be.Ok()
 
 }
