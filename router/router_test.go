@@ -150,4 +150,6 @@ func TestRouter(t *testing.T) {
 	matched = router.MatchStringMethod("/user-profile/user-address", "OPTIONS")
 	expect(matched.Route).To.Be.Ok()
 
+	expect(router.GetActionRoute("UserProfileHomeInfo") !=nil).To.Be.Ok()
+
 }

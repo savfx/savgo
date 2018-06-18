@@ -71,6 +71,7 @@ type Router struct {
 	modalRoutes    []*ModalRoute
 	actionRoutes   []*ActionRoute
 	absoluteRoutes map[Method][]*ActionRoute
+	actionMap map[string]*ActionRoute
 }
 
 type MatchedRoute struct {
@@ -94,8 +95,9 @@ func Create(opts *Option) (*Router) {
 		}
 	}
 	router.opts = *opts
-	router.modalMap = make(map[string]*ModalRoute, 0)
-	router.absoluteRoutes = make(map[Method][]*ActionRoute, 0)
+	router.modalMap = make(map[string]*ModalRoute)
+	router.absoluteRoutes = make(map[Method][]*ActionRoute)
+	router.actionMap = make(map[string]*ActionRoute)
 	return router
 }
 
@@ -256,6 +258,7 @@ func (router *Router) createActionRoute(opts gjson.Result, name string, modalNam
 		modal.ChildList[ANY] = append(modal.ChildList[ANY], actionRoute)
 	}
 	router.actionRoutes = append(router.actionRoutes, actionRoute)
+	router.actionMap[actionRoute.Name] = actionRoute
 }
 
 var normalRegexp = regexp.MustCompile(`/\/+/`)
@@ -289,4 +292,19 @@ func stripSuffix(path string) string {
 		}
 	}
 	return path
+}
+
+func (router * Router) GetActionRoute(actionName string) * ActionRoute {
+	if action, ok := router.actionMap[actionName]; ok {
+		return action
+	}
+	return nil
+}
+
+func (router Router) GetPrefix () string {
+	return router.opts.Prefix
+}
+
+func (router * Router) SetPrefix (prefix string) {
+	router.opts.Prefix = prefix
 }

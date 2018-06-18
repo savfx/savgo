@@ -10,8 +10,8 @@ func TestNewTextServer(t *testing.T) {
 	svr := NewTextServer("hello world")
 	go svr.Start()
 	defer svr.Close()
-	body, _, _ := svr.Client.Get("/", nil)
-	expect(body).To.Equal("hello world")
+	res, _ := svr.Client.Get("/", nil)
+	expect(res.Body).To.Equal("hello world")
 }
 
 func TestNewJsonServer(t *testing.T) {
@@ -19,8 +19,8 @@ func TestNewJsonServer(t *testing.T) {
 	 svr := NewJsonServer(map[string]interface{}{"a": "b"})
 	 go svr.Start()
 	 defer svr.Close()
-	 body, _, _ := svr.Client.Get("/", nil)
-	 expect(body).To.Equal(`{"a":"b"}`)
+	 res, _ := svr.Client.Get("/", nil)
+	 expect(res.Body).To.Equal(`{"a":"b"}`)
 }
 
 func TestNewJsonServer2(t *testing.T) {
@@ -28,8 +28,8 @@ func TestNewJsonServer2(t *testing.T) {
 	svr := NewJsonServer([]interface{}{"a", "b"})
 	go svr.Start()
 	defer svr.Close()
-	body, _, _ := svr.Client.Get("/", nil)
-	expect(body).To.Equal(`["a","b"]`)
+	res, _ := svr.Client.Get("/", nil)
+	expect(res.Body).To.Equal(`["a","b"]`)
 	expect(len(svr.Headers)).To.Equal(0)
 	expect(svr.Body).To.Equal("")
 }
