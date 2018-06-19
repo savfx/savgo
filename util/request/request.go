@@ -142,3 +142,11 @@ func (ctx Request) PostJson(path string, headers Headers, body string) (*Respons
 	headers["Content-Type"] = "application/json"
 	return ctx.fetch(POST, path, headers, body)
 }
+
+func (ctx Request) GetBaseUrl() string {
+	return  ctx.options.BaseUrl
+}
+
+func (ctx * Request) SetBaseUrl (value string) {
+	ctx.options.BaseUrl = value
+}
