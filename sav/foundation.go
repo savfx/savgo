@@ -46,6 +46,8 @@ type Contract interface {
 	GetName() string
 	GetModal(name string) Modal
 	GetRouter() *router.Router
+	GetOptions () map[string]interface{}
+	UpdateOptions(options map[string]interface{})
 }
 
 type Request interface {
@@ -61,5 +63,6 @@ type Response interface {
 }
 
 type Application interface {
+	SyncContract(contract Contract)
 	Fetch(action Action, handler DataHandler) (Response, error)
 }

@@ -7,6 +7,20 @@ type BaseContract struct {
 	name string
 	modals map[string]Modal
 	router * router.Router
+	options map[string]interface{}
+}
+
+func (ctx BaseContract) GetOptions () map[string]interface{} {
+	return  ctx.options
+}
+
+func (ctx * BaseContract) UpdateOptions(options map[string]interface{}) {
+	if options != nil {
+		for name, value := range options {
+			ctx.options[name] = value
+		}
+		ctx.app.SyncContract(ctx)
+	}
 }
 
 func (ctx BaseContract) GetName() string {
