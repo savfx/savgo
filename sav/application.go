@@ -38,29 +38,36 @@ func (ctx BaseApplication) Fetch(action Action, handler DataHandler) (Response, 
   params := handler.GetParams()
   url := route.Route.Compile(params)
   body := ""
+  var error error = nil
   if route.Method == router.GET || route.Method == router.DELETE {
     text, err := encodeQuery(handler.GetInputValue())
     if err == nil {
       if text != "" {
         url += "?" + text
       }
+    } else {
+      error = err
     }
   } else {
-    if (route.Form) {
+    if route.Form {
       text, err := encodeQuery(handler.GetInputValue())
       if err == nil {
         if text != "" {
           body = text
         }
+      } else {
+        error = err
       }
     } else {
       text, err := json.Marshal(handler.GetInputValue())
       if err == nil {
         body = string(text)
+      } else {
+        error = err
       }
     }
   }
-  fmt.Println(url, body)
+  fmt.Println(url, body, error)
   return nil, nil
 }
 
