@@ -7,12 +7,15 @@ import (
   "github.com/savfx/savgo/router"
   "time"
   "encoding/json"
-  "fmt"
+  "errors"
 )
+
+type Middleware func (ctx * FetchContext) error
 
 type BaseApplication struct {
   requests map[string]*request.Request
   contracts map[string]Contract
+  middlewares []Middleware
 }
 
 func encodeQuery (value interface{}) (string, error) {
@@ -28,6 +31,18 @@ func encodeQuery (value interface{}) (string, error) {
     }
   }
   return "", err
+}
+
+type FetchContext struct {
+  ContractName string
+  ActionName string
+  Router * router.Router
+  Params map[string]interface{}
+  Headers map[string]string
+  Url string
+  Body string
+  Response *request.Response
+  Done bool
 }
 
 func (ctx BaseApplication) Fetch(action Action, handler DataHandler) (Response, error){
@@ -67,8 +82,60 @@ func (ctx BaseApplication) Fetch(action Action, handler DataHandler) (Response, 
       }
     }
   }
-  fmt.Println(url, body, error)
-  return nil, nil
+  if error != nil {
+    return nil, error
+  }
+  headers := map[string]string{}
+
+  context := &FetchContext{
+    ContractName: name,
+    ActionName: actionName,
+    Params: params,
+    Headers: headers,
+    Url: url,
+    Body: body,
+  }
+
+  for _, middleware := range ctx.middlewares {
+    if err := middleware(context); err != nil {
+      return nil, error
+    }
+  }
+  var res *request.Response = nil
+  if !context.Done {
+    req := ctx.requests[name]
+    if route.Method == router.GET {
+      res, error = req.Get(context.Url, context.Headers)
+    } else if route.Method == router.POST {
+      if route.Form {
+        res, error = req.PostForm(context.Url, context.Headers, context.Body)
+      } else {
+        res, error = req.Post(context.Url, context.Headers, context.Body)
+      }
+    } else {
+      return nil, errors.New("not support")
+    }
+    context.Done = true
+    context.Response = res
+  }
+
+  for _, middleware := range ctx.middlewares {
+    if err := middleware(context); err != nil {
+      return nil, error
+    }
+  }
+
+  if error != nil {
+    return nil, error
+  }
+
+  response := &BaseResponse{
+    StatusCode: res.StatusCode,
+    Headers: res.Headers,
+    DataSource: NewJsonDataSource([]byte(res.Body), json.Unmarshal),
+  }
+
+  return response, nil
 }
 
 func (ctx BaseApplication) SyncContract(contract Contract) {
@@ -88,10 +155,15 @@ func (ctx BaseApplication) SyncContract(contract Contract) {
   }
 }
 
+func (ctx * BaseApplication) AddMiddleware(middleware Middleware) {
+  ctx.middlewares = append(ctx.middlewares, middleware)
+}
+
 func NewApplication() Application {
   res := &BaseApplication{
     contracts: make(map[string]Contract),
     requests: make(map[string]*request.Request),
+    middlewares: make([]Middleware, 0),
   }
   return res
 }

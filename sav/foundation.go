@@ -57,9 +57,8 @@ type Request interface {
 }
 
 type Response interface {
-	GetStatus() int
+	GetStatusCode() int
 	GetHeaders() map[string]string
-	GetHeader(name string) string
 	GetData() DataSource
 }
 
