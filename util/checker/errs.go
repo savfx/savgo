@@ -5,8 +5,8 @@ import (
 )
 
 var (
-	ErrInvalidValue  = errors.New("invalid value")
-	ErrIsNil  = errors.New("the value can not be nil")
+	ErrInvalidValue = errors.New("invalid value")
+	ErrIsNil        = errors.New("the value can not be nil")
 
 	ErrRuleGt  = errors.New("the value can not match gt rule")
 	ErrRuleGte = errors.New("the value can not match gte rule")

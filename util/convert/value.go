@@ -6,13 +6,13 @@ type ValueAccess struct {
 	object *ObjectAccess
 }
 
-func NewValueAccess(data interface{}) (*ValueAccess) {
+func NewValueAccess(data interface{}) *ValueAccess {
 	res := &ValueAccess{}
 	res.data = data
 	return res
 }
 
-func (ctx *ValueAccess) Set(data interface{}) (*ValueAccess) {
+func (ctx *ValueAccess) Set(data interface{}) *ValueAccess {
 	ctx.data = data
 	return ctx
 }

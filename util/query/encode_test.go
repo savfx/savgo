@@ -1,10 +1,10 @@
 package query
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/a8m/expect"
 	"testing"
-	"fmt"
-	"encoding/json"
 )
 
 func TestEncode(t *testing.T) {

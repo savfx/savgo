@@ -239,27 +239,27 @@ func (ctx FormArray) Prefix(key string) string {
 	return ctx.prefix + "[" + key + "]"
 }
 
-func (ctx FormArray) Field(index int) (*FormObject) {
+func (ctx FormArray) Field(index int) *FormObject {
 	if index < 0 || index >= ctx.length {
 		return nil
 	}
 	return ctx.field.SetPrefix(ctx.Prefix(strconv.Itoa(index)))
 }
 
-func (ctx FormArray) EachField(callback func(int, *FormObject) ()) {
+func (ctx FormArray) EachField(callback func(int, *FormObject)) {
 	for i := 0; i < ctx.length; i++ {
 		callback(i, ctx.field.SetPrefix(ctx.Prefix(strconv.Itoa(i))))
 	}
 }
 
-func (ctx FormArray) Value(index int) (*ValueAccess) {
+func (ctx FormArray) Value(index int) *ValueAccess {
 	if index < 0 || index >= ctx.length {
 		return ctx.value.Set(nil)
 	}
 	return ctx.value.Set(ctx.arrayValue[index])
 }
 
-func (ctx FormArray) EachValue(callback func(int, *ValueAccess) ()) {
+func (ctx FormArray) EachValue(callback func(int, *ValueAccess)) {
 	for i := 0; i < ctx.length; i++ {
 		callback(i, ctx.value.Set(ctx.arrayValue[i]))
 	}

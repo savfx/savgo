@@ -1,12 +1,12 @@
 package convert
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/a8m/expect"
 	"github.com/savfx/savgo/util/query"
 	"net/url"
-	"encoding/json"
 	"testing"
-	"fmt"
 )
 
 func TestForm(t *testing.T) {
@@ -46,10 +46,10 @@ func TestForm(t *testing.T) {
 	expect(root.GetArray("followers").Len()).To.Equal(3)
 	expect(root.GetInt("age")).To.Equal(35)
 	expect(root.GetObject("profile").GetArray("ages").Len()).To.Equal(3)
-	root.GetArray("followers").EachField(func (index int, val * FormObject) {
+	root.GetArray("followers").EachField(func(index int, val *FormObject) {
 		expect(val.GetInt("age")).To.Equal(10)
 	})
-	root.GetObject("profile").GetArray("ages").EachValue(func (index int, val * ValueAccess) {
+	root.GetObject("profile").GetArray("ages").EachValue(func(index int, val *ValueAccess) {
 		expect(val.Int() > 0).To.Equal(true)
 	})
 }

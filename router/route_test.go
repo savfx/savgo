@@ -1,8 +1,8 @@
 package router
 
 import (
-	"testing"
 	"github.com/a8m/expect"
+	"testing"
 )
 
 func TestMatch(t *testing.T) {

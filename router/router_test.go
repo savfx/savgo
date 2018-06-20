@@ -1,19 +1,19 @@
 package router
 
 import (
-	"testing"
 	"github.com/a8m/expect"
+	"testing"
 )
 
 func TestStringPrefix(t *testing.T) {
 	expect := expect.New(t)
-	expect(stripPrefix("", "")).To.Equal("");
-	expect(stripPrefix("/", "")).To.Equal("/");
-	expect(stripPrefix("/a", "/a")).To.Equal("/");
-	expect(stripPrefix("/a/", "/a")).To.Equal("/");
-	expect(stripPrefix("/a/b", "/a")).To.Equal("/b");
-	expect(stripPrefix("/a/", "/a/")).To.Equal("/");
-	expect(stripPrefix("/a/b", "/a/")).To.Equal("/b");
+	expect(stripPrefix("", "")).To.Equal("")
+	expect(stripPrefix("/", "")).To.Equal("/")
+	expect(stripPrefix("/a", "/a")).To.Equal("/")
+	expect(stripPrefix("/a/", "/a")).To.Equal("/")
+	expect(stripPrefix("/a/b", "/a")).To.Equal("/b")
+	expect(stripPrefix("/a/", "/a/")).To.Equal("/")
+	expect(stripPrefix("/a/b", "/a/")).To.Equal("/b")
 }
 
 func TestRouteBasic(t *testing.T) {
@@ -150,6 +150,6 @@ func TestRouter(t *testing.T) {
 	matched = router.MatchStringMethod("/user-profile/user-address", "OPTIONS")
 	expect(matched.Route).To.Be.Ok()
 
-	expect(router.GetActionRoute("UserProfileHomeInfo") !=nil).To.Be.Ok()
+	expect(router.GetActionRoute("UserProfileHomeInfo") != nil).To.Be.Ok()
 
 }

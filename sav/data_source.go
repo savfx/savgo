@@ -5,15 +5,15 @@ import (
 )
 
 type BaseDataSource struct {
-	FormObject *convert.FormObject
-	FormArray *convert.FormArray
+	FormObject   *convert.FormObject
+	FormArray    *convert.FormArray
 	ObjectAccess *convert.ObjectAccess
-	ArrayAccess * convert.ArrayAccess
+	ArrayAccess  *convert.ArrayAccess
 }
 
-type Unmarshal func (data []byte, v interface{}) error
+type Unmarshal func(data []byte, v interface{}) error
 
-func NewJsonDataSource (data []byte, unmarshal Unmarshal) *BaseDataSource {
+func NewJsonDataSource(data []byte, unmarshal Unmarshal) *BaseDataSource {
 	if len(data) > 0 {
 		if data[0] == '{' {
 			var src map[string]interface{}
@@ -26,7 +26,7 @@ func NewJsonDataSource (data []byte, unmarshal Unmarshal) *BaseDataSource {
 		} else if data[0] == '[' {
 			var src []interface{}
 			err := unmarshal(data, &src)
-			if  err == nil {
+			if err == nil {
 				return &BaseDataSource{
 					ArrayAccess: convert.NewArrayAccess(src),
 				}
@@ -36,7 +36,7 @@ func NewJsonDataSource (data []byte, unmarshal Unmarshal) *BaseDataSource {
 	return nil
 }
 
-func NewFormDataSource (values map[string][]string) *BaseDataSource {
+func NewFormDataSource(values map[string][]string) *BaseDataSource {
 	return &BaseDataSource{
 		FormObject: convert.NewFormObject(values),
 	}
@@ -51,21 +51,21 @@ func (ctx BaseDataSource) GetFormObject() *convert.FormObject {
 }
 
 func (ctx BaseDataSource) GetFormArray() *convert.FormArray {
-	return  ctx.FormArray
+	return ctx.FormArray
 }
 
 func (ctx BaseDataSource) GetObjectAccess() *convert.ObjectAccess {
-	return  ctx.ObjectAccess
+	return ctx.ObjectAccess
 }
 
-func (ctx BaseDataSource) GetArrayAccess() * convert.ArrayAccess {
-	return  ctx.ArrayAccess
+func (ctx BaseDataSource) GetArrayAccess() *convert.ArrayAccess {
+	return ctx.ArrayAccess
 }
 
 type BaseDataHandler struct {
 	Params map[string]interface{}
 }
 
-func (ctx BaseDataHandler) GetParams () map[string]interface{} {
+func (ctx BaseDataHandler) GetParams() map[string]interface{} {
 	return ctx.Params
 }

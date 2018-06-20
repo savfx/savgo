@@ -1,7 +1,7 @@
 package sav
 
 type BaseRequest struct {
-	Headers map[string]string
+	Headers    map[string]string
 	DataSource *BaseDataSource
 }
 
@@ -15,7 +15,7 @@ func (ctx BaseRequest) GetData() DataSource {
 
 type BaseResponse struct {
 	StatusCode int
-	Headers map[string]string
+	Headers    map[string]string
 	DataSource *BaseDataSource
 }
 

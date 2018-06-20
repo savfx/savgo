@@ -10,7 +10,7 @@ import (
 type Method uint8
 
 const (
-	GET     = iota
+	GET = iota
 	POST
 	PUT
 	DELETE
@@ -60,7 +60,7 @@ type ActionRoute struct {
 	Name   string
 	Path   string
 	Method Method
-	Form bool
+	Form   bool
 	Opts   gjson.Result
 	Modal  *ModalRoute
 	Route  Route
@@ -72,7 +72,7 @@ type Router struct {
 	modalRoutes    []*ModalRoute
 	actionRoutes   []*ActionRoute
 	absoluteRoutes map[Method][]*ActionRoute
-	actionMap map[string]*ActionRoute
+	actionMap      map[string]*ActionRoute
 }
 
 type MatchedRoute struct {
@@ -81,7 +81,7 @@ type MatchedRoute struct {
 	Params map[string]string
 }
 
-func Create(opts *Option) (*Router) {
+func Create(opts *Option) *Router {
 	router := &Router{}
 	if opts.CaseType != "" {
 		_, ok := strcase.StringToCaseType[opts.CaseType]
@@ -117,7 +117,7 @@ func (router *Router) LoadGjson(contract gjson.Result) {
 	})
 }
 
-func (router *Router) MatchStringMethod(path string, method string) (*MatchedRoute) {
+func (router *Router) MatchStringMethod(path string, method string) *MatchedRoute {
 	method = strings.ToUpper(method)
 	_, ok := StringToMethod[method]
 	if ok {
@@ -126,7 +126,7 @@ func (router *Router) MatchStringMethod(path string, method string) (*MatchedRou
 	return nil
 }
 
-func (router *Router) Match(path string, method Method) (*MatchedRoute) {
+func (router *Router) Match(path string, method Method) *MatchedRoute {
 	if method == OPTIONS {
 		method = ANY
 	}
@@ -173,7 +173,7 @@ func (router *Router) createModalRoute(opts gjson.Result, name string) {
 	if path.Exists() {
 		modalRoute.Path = path.String()
 	}
-	modalRoute.Path = normalPath("/" + modalRoute.Path);
+	modalRoute.Path = normalPath("/" + modalRoute.Path)
 	// 生成路由
 	modalRoute.route = Parse(modalRoute.Path, &ParseOption{
 		End:       false,
@@ -299,17 +299,17 @@ func stripSuffix(path string) string {
 	return path
 }
 
-func (router * Router) GetActionRoute(actionName string) * ActionRoute {
+func (router *Router) GetActionRoute(actionName string) *ActionRoute {
 	if action, ok := router.actionMap[actionName]; ok {
 		return action
 	}
 	return nil
 }
 
-func (router Router) GetPrefix () string {
+func (router Router) GetPrefix() string {
 	return router.opts.Prefix
 }
 
-func (router * Router) SetPrefix (prefix string) {
+func (router *Router) SetPrefix(prefix string) {
 	router.opts.Prefix = prefix
 }

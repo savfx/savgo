@@ -1,10 +1,10 @@
 package sav
 
 import (
-	"testing"
-	"github.com/a8m/expect"
 	"encoding/json"
+	"github.com/a8m/expect"
 	"net/url"
+	"testing"
 )
 
 func TestNewJsonDataSource(t *testing.T) {

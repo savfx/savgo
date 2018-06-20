@@ -1,10 +1,10 @@
 package sav
 
 type BaseAction struct {
-	name string
-	modal Modal
+	name     string
+	modal    Modal
 	contract Contract
-	handler ActionHandler
+	handler  ActionHandler
 }
 
 func (ctx BaseAction) GetName() string {
@@ -20,15 +20,15 @@ func (ctx BaseAction) GetContract() Contract {
 }
 
 func (ctx BaseAction) GetHandler() *ActionHandler {
-	return  &ctx.handler
+	return &ctx.handler
 }
 
 func NewBaseAction(modal Modal, name string, handler ActionHandler) *BaseAction {
 	res := &BaseAction{
 		contract: modal.GetContract(),
-		name: name,
-		modal: modal,
-		handler:handler,
+		name:     name,
+		modal:    modal,
+		handler:  handler,
 	}
 	return res
 }

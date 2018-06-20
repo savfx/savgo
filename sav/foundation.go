@@ -1,8 +1,8 @@
 package sav
 
 import (
-	"github.com/savfx/savgo/util/convert"
 	"github.com/savfx/savgo/router"
+	"github.com/savfx/savgo/util/convert"
 )
 
 type DataSource interface {
@@ -10,23 +10,23 @@ type DataSource interface {
 	GetFormObject() *convert.FormObject
 	GetFormArray() *convert.FormArray
 	GetObjectAccess() *convert.ObjectAccess
-	GetArrayAccess() * convert.ArrayAccess
+	GetArrayAccess() *convert.ArrayAccess
 }
 
 type DataHandler interface {
-	GetInputValue () interface{}
-	GetOutputValue () interface{}
+	GetInputValue() interface{}
+	GetOutputValue() interface{}
 	GetParams() map[string]interface{}
-	ParseInput (ds DataSource)
+	ParseInput(ds DataSource)
 	ParseOutput(ds DataSource)
 }
 
-type DataHandlerFactory func () DataHandler
-type DataHandlerBinder func (handler DataHandler, value interface{})
+type DataHandlerFactory func() DataHandler
+type DataHandlerBinder func(handler DataHandler, value interface{})
 
 type ActionHandler struct {
-	Create DataHandlerFactory
-	BindInput DataHandlerBinder
+	Create     DataHandlerFactory
+	BindInput  DataHandlerBinder
 	BindOutput DataHandlerBinder
 }
 
@@ -47,7 +47,7 @@ type Contract interface {
 	GetName() string
 	GetModal(name string) Modal
 	GetRouter() *router.Router
-	GetOptions () map[string]interface{}
+	GetOptions() map[string]interface{}
 	UpdateOptions(options map[string]interface{})
 }
 

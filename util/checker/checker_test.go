@@ -1,9 +1,9 @@
 package checker
 
 import (
+	"fmt"
 	"github.com/a8m/expect"
 	"testing"
-	"fmt"
 )
 
 func TestSpecChecker(t *testing.T) {

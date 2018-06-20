@@ -1,8 +1,8 @@
 package router
 
 import (
-	"regexp"
 	"net/url"
+	"regexp"
 	"strconv"
 )
 
@@ -67,7 +67,7 @@ func Parse(path string, opt *ParseOption) (route Route) {
 	return
 }
 
-func (ctx *Route) Match(path string) (map[string]string) {
+func (ctx *Route) Match(path string) map[string]string {
 	if ctx.matcher == nil {
 		ctx.matcher = regexp.MustCompile(ctx.Regexp)
 	}
@@ -89,7 +89,7 @@ func (ctx *Route) Match(path string) (map[string]string) {
 	return nil
 }
 
-func (ctx *Route) Compile(params map[string]interface{}) (string) {
+func (ctx *Route) Compile(params map[string]interface{}) string {
 	data := make(map[string]string)
 	for key, param := range params {
 		str := ""

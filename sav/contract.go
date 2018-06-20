@@ -3,18 +3,18 @@ package sav
 import "github.com/savfx/savgo/router"
 
 type BaseContract struct {
-	app Application
-	name string
-	modals map[string]Modal
-	router * router.Router
+	app     Application
+	name    string
+	modals  map[string]Modal
+	router  *router.Router
 	options map[string]interface{}
 }
 
-func (ctx BaseContract) GetOptions () map[string]interface{} {
-	return  ctx.options
+func (ctx BaseContract) GetOptions() map[string]interface{} {
+	return ctx.options
 }
 
-func (ctx * BaseContract) UpdateOptions(options map[string]interface{}) {
+func (ctx *BaseContract) UpdateOptions(options map[string]interface{}) {
 	if options != nil {
 		for name, value := range options {
 			ctx.options[name] = value
@@ -31,7 +31,7 @@ func (ctx BaseContract) GetModal(name string) Modal {
 	return ctx.modals[name]
 }
 
-func (ctx BaseContract) GetRouter() * router.Router {
+func (ctx BaseContract) GetRouter() *router.Router {
 	return ctx.router
 }
 
@@ -61,15 +61,15 @@ func (ctx BaseContract) GetAction(modalName string, actionName string) Action {
 	return nil
 }
 
-func (ctx * BaseContract) Init(app Application, name string) {
+func (ctx *BaseContract) Init(app Application, name string) {
 	ctx.name = name
 	ctx.app = app
 	ctx.modals = make(map[string]Modal)
 	ctx.router = router.Create(&router.Option{
-		Prefix    : "",
-		Sensitive : false,
-		Method    : "POST",
-		CaseType  : "camel",
+		Prefix:    "",
+		Sensitive: false,
+		Method:    "POST",
+		CaseType:  "camel",
 	})
 }
 
@@ -79,7 +79,7 @@ func NewBaseContract(app Application, name string) *BaseContract {
 	return res
 }
 
-func (ctx * BaseContract) DefineModal (name string, actions map[string]ActionHandler) *BaseModal{
+func (ctx *BaseContract) DefineModal(name string, actions map[string]ActionHandler) *BaseModal {
 	res := NewBaseModal(ctx, name)
 	if actions != nil {
 		res.DefineActions(actions)

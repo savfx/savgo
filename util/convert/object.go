@@ -5,7 +5,7 @@ type ObjectAccess struct {
 	valueAccess *ValueAccess
 }
 
-func NewObjectAccess(data map[string]interface{}) (*ObjectAccess) {
+func NewObjectAccess(data map[string]interface{}) *ObjectAccess {
 	res := &ObjectAccess{}
 	return res.Set(data)
 }
@@ -19,7 +19,7 @@ func (ctx *ObjectAccess) Set(data map[string]interface{}) *ObjectAccess {
 	return ctx
 }
 
-func (ctx ObjectAccess) ForEach(callback func(string, *ValueAccess) (bool)) {
+func (ctx ObjectAccess) ForEach(callback func(string, *ValueAccess) bool) {
 	if ctx.valueAccess == nil {
 		ctx.valueAccess = NewValueAccess(nil)
 	}
@@ -54,7 +54,7 @@ func (ctx ObjectAccess) HasObject(name string) bool {
 	return false
 }
 
-func (ctx ObjectAccess) GetObject(name string) (*ObjectAccess) {
+func (ctx ObjectAccess) GetObject(name string) *ObjectAccess {
 	if ctx.HasObject(name) {
 		return NewObjectAccess(ctx.GetRaw(name).(map[string]interface{}))
 	}
@@ -71,7 +71,7 @@ func (ctx ObjectAccess) HasArray(name string) bool {
 	return false
 }
 
-func (ctx ObjectAccess) GetArray(name string) (*ArrayAccess) {
+func (ctx ObjectAccess) GetArray(name string) *ArrayAccess {
 	if ctx.HasArray(name) {
 		return NewArrayAccess(ctx.GetRaw(name).([]interface{}))
 	}
