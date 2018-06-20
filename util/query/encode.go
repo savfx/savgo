@@ -21,18 +21,32 @@ func appendValue(prefix string, value interface{}, arr *[]string) {
 	switch val := value.(type) {
 	case string:
 		str = url.QueryEscape(val)
+	case *string:
+		str = url.QueryEscape(*val)
 	case []byte:
 		str = url.QueryEscape(string(val))
+	case *[]byte:
+		str = url.QueryEscape(string(*val))
 	case bool:
 		if val {
 			str = "true"
 		} else {
 			str = "false"
 		}
+	case *bool:
+		if *val {
+			str = "true"
+		} else {
+			str = "false"
+		}
 	case int:
 		str = strconv.FormatInt(int64(val), 10)
+	case *int:
+		str = strconv.FormatInt(int64(*val), 10)
 	case int8:
 		str = strconv.FormatInt(int64(val), 10)
+	case *int8:
+		str = strconv.FormatInt(int64(*val), 10)
 	case int16:
 		str = strconv.FormatInt(int64(val), 10)
 	case int32:
@@ -53,6 +67,26 @@ func appendValue(prefix string, value interface{}, arr *[]string) {
 		str = strconv.FormatFloat(float64(val), 'f', -1, 64)
 	case float64:
 		str = strconv.FormatFloat(val, 'f', -1, 64)
+	case *int16:
+		str = strconv.FormatInt(int64(*val), 10)
+	case *int32:
+		str = strconv.FormatInt(int64(*val), 10)
+	case *int64:
+		str = strconv.FormatInt(*val, 10)
+	case *uint:
+		str = strconv.FormatUint(uint64(*val), 10)
+	case *uint8:
+		str = strconv.FormatUint(uint64(*val), 10)
+	case *uint16:
+		str = strconv.FormatUint(uint64(*val), 10)
+	case *uint32:
+		str = strconv.FormatUint(uint64(*val), 10)
+	case *uint64:
+		str = strconv.FormatUint(*val, 10)
+	case *float32:
+		str = strconv.FormatFloat(float64(*val), 'f', -1, 64)
+	case *float64:
+		str = strconv.FormatFloat(*val, 'f', -1, 64)
 	}
 	*arr = append(*arr, prefix+"="+str)
 }

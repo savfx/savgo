@@ -61,3 +61,11 @@ func (ctx BaseDataSource) GetObjectAccess() *convert.ObjectAccess {
 func (ctx BaseDataSource) GetArrayAccess() * convert.ArrayAccess {
 	return  ctx.ArrayAccess
 }
+
+type BaseDataHandler struct {
+	Params map[string]interface{}
+}
+
+func (ctx BaseDataHandler) GetParams () map[string]interface{} {
+	return ctx.Params
+}

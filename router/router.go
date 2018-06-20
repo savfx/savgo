@@ -60,6 +60,7 @@ type ActionRoute struct {
 	Name   string
 	Path   string
 	Method Method
+	Form bool
 	Opts   gjson.Result
 	Modal  *ModalRoute
 	Route  Route
@@ -218,6 +219,10 @@ func (router *Router) createActionRoute(opts gjson.Result, name string, modalNam
 		Name:   modal.Name + strcase.Pascal(name),
 		Opts:   opts,
 		Method: method,
+	}
+	form := opts.Get("form")
+	if form.Exists() {
+		actionRoute.Form = form.Bool()
 	}
 	isAbsolute := false
 	// 处理路径

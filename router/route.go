@@ -96,10 +96,20 @@ func (ctx *Route) Compile(params map[string]interface{}) (string) {
 		switch v := param.(type) {
 		case string:
 			str = param.(string)
+		case *string:
+			str = *param.(*string)
 		case int:
 			str = strconv.FormatInt(int64(v), 10)
+		case *int:
+			str = strconv.FormatInt(int64(*v), 10)
 		case bool:
 			if param.(bool) {
+				str = "true"
+			} else {
+				str = "false"
+			}
+		case *bool:
+			if *param.(*bool) {
 				str = "true"
 			} else {
 				str = "false"

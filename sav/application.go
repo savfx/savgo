@@ -3,7 +3,11 @@ package sav
 import (
   "github.com/savfx/savgo/util/request"
   "github.com/savfx/savgo/util/convert"
+  "github.com/savfx/savgo/util/query"
+  "github.com/savfx/savgo/router"
   "time"
+  "encoding/json"
+  "fmt"
 )
 
 type BaseApplication struct {
@@ -11,15 +15,52 @@ type BaseApplication struct {
   contracts map[string]Contract
 }
 
+func encodeQuery (value interface{}) (string, error) {
+  text, err := json.Marshal(value)
+  if err == nil {
+    search := map[string]interface{}{}
+    err = json.Unmarshal(text, &search)
+    if err == nil {
+      searchText := query.Encode(search)
+      if searchText != "" {
+        return searchText, nil
+      }
+    }
+  }
+  return "", err
+}
+
 func (ctx BaseApplication) Fetch(action Action, handler DataHandler) (Response, error){
   name := action.GetContract().GetName()
   contract := ctx.contracts[name]
   actionName := action.GetModal().GetName() + action.GetName()
-  router := contract.GetRouter()
-  route := router.GetActionRoute(actionName)
-  if len(route.Route.Keys) > 0 {
-
+  route := contract.GetRouter().GetActionRoute(actionName)
+  params := handler.GetParams()
+  url := route.Route.Compile(params)
+  body := ""
+  if route.Method == router.GET || route.Method == router.DELETE {
+    text, err := encodeQuery(handler.GetInputValue())
+    if err == nil {
+      if text != "" {
+        url += "?" + text
+      }
+    }
+  } else {
+    if (route.Form) {
+      text, err := encodeQuery(handler.GetInputValue())
+      if err == nil {
+        if text != "" {
+          body = text
+        }
+      }
+    } else {
+      text, err := json.Marshal(handler.GetInputValue())
+      if err == nil {
+        body = string(text)
+      }
+    }
   }
+  fmt.Println(url, body)
   return nil, nil
 }
 

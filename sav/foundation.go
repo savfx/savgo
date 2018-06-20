@@ -16,6 +16,7 @@ type DataSource interface {
 type DataHandler interface {
 	GetInputValue () interface{}
 	GetOutputValue () interface{}
+	GetParams() map[string]interface{}
 	ParseInput (ds DataSource)
 	ParseOutput(ds DataSource)
 }
