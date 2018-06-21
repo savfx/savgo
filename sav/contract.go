@@ -1,6 +1,8 @@
 package sav
 
-import "github.com/savfx/savgo/router"
+import (
+	"github.com/savfx/savgo/router"
+)
 
 type BaseContract struct {
 	app     Application
@@ -19,7 +21,9 @@ func (ctx *BaseContract) UpdateOptions(options map[string]interface{}) {
 		for name, value := range options {
 			ctx.options[name] = value
 		}
-		ctx.app.SyncContract(ctx)
+		if ctx.app != nil {
+			ctx.app.SyncContract(ctx)
+		}
 	}
 }
 
@@ -61,10 +65,12 @@ func (ctx BaseContract) GetAction(modalName string, actionName string) Action {
 	return nil
 }
 
-func (ctx *BaseContract) Init(app Application, name string) {
+func (ctx *BaseContract) Init(app Application, name string, options map[string]interface{}) {
 	ctx.name = name
 	ctx.app = app
 	ctx.modals = make(map[string]Modal)
+	ctx.options = make(map[string]interface{})
+	ctx.UpdateOptions(options)
 	ctx.router = router.Create(&router.Option{
 		Prefix:    "",
 		Sensitive: false,
@@ -73,9 +79,9 @@ func (ctx *BaseContract) Init(app Application, name string) {
 	})
 }
 
-func NewBaseContract(app Application, name string) *BaseContract {
+func NewBaseContract(app Application, name string, options map[string]interface{}) *BaseContract {
 	res := &BaseContract{}
-	res.Init(app, name)
+	res.Init(app, name, options)
 	return res
 }
 
