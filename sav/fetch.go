@@ -17,6 +17,7 @@ type BaseResponse struct {
 	StatusCode int
 	Headers    map[string]string
 	DataSource *BaseDataSource
+	Body string
 }
 
 func (ctx BaseResponse) GetStatusCode() int {

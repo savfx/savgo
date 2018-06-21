@@ -119,28 +119,64 @@ func (ctx Request) fetch (method Method, path string, headers Headers, data stri
 	return res, nil
 }
 
+func (ctx Request) fetchForm (method Method, path string, headers Headers, data string) (*Response, error) {
+	if headers == nil {
+		headers = make(Headers)
+	}
+	headers["Content-Type"] = "application/x-www-form-urlencoded"
+	return ctx.fetch(method, path, headers, data)
+}
+
+func (ctx Request) fetchJson (method Method, path string, headers Headers, data string) (*Response, error) {
+	if headers == nil {
+		headers = make(Headers)
+	}
+	headers["Content-Type"] = "application/json"
+	return ctx.fetch(method, path, headers, data)
+}
+
 func (ctx Request) Get(path string, headers Headers) (*Response, error) {
 	return ctx.fetch(GET, path, headers, "")
+}
+
+func (ctx Request) Delete(path string, headers Headers) (*Response, error) {
+	return ctx.fetch(DELETE, path, headers, "")
 }
 
 func (ctx Request) Post(path string, headers Headers, body string) (*Response, error) {
 	return ctx.fetch(POST, path, headers, body)
 }
 
+func (ctx Request) Put(path string, headers Headers, body string) (*Response, error) {
+	return ctx.fetch(PUT, path, headers, body)
+}
+
+func (ctx Request) Patch(path string, headers Headers, body string) (*Response, error) {
+	return ctx.fetch(PATCH, path, headers, body)
+}
+
+func (ctx Request) PutForm(path string, headers Headers, body string) (*Response, error) {
+	return ctx.fetchForm(PUT, path, headers, body)
+}
+
+func (ctx Request) PutJson(path string, headers Headers, body string) (*Response, error) {
+	return ctx.fetchJson(PUT, path, headers, body)
+}
+
 func (ctx Request) PostForm(path string, headers Headers, body string) (*Response, error) {
-	if headers == nil {
-		headers = make(Headers)
-	}
-	headers["Content-Type"] = "application/x-www-form-urlencoded"
-	return ctx.fetch(POST, path, headers, body)
+	return ctx.fetchForm(POST, path, headers, body)
 }
 
 func (ctx Request) PostJson(path string, headers Headers, body string) (*Response, error) {
-	if headers == nil {
-		headers = make(Headers)
-	}
-	headers["Content-Type"] = "application/json"
-	return ctx.fetch(POST, path, headers, body)
+	return ctx.fetchJson(POST, path, headers, body)
+}
+
+func (ctx Request) PatchForm(path string, headers Headers, body string) (*Response, error) {
+	return ctx.fetchForm(PATCH, path, headers, body)
+}
+
+func (ctx Request) PatchJson(path string, headers Headers, body string) (*Response, error) {
+	return ctx.fetchJson(PATCH, path, headers, body)
 }
 
 func (ctx Request) GetBaseUrl() string {
