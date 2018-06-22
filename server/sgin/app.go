@@ -6,58 +6,54 @@ import (
 	"github.com/savfx/savgo/sav"
 )
 
-type Controller struct {
+type GinController struct {
 	Ctx *gin.Context
 }
 
-type IController interface {
-	GetContext() interface{}
-}
-
-func (ctrl Controller) GetContext() interface{} {
+func (ctrl GinController) GetContext() interface{} {
 	return ctrl.Ctx
 }
 
-func (ctrl Controller) SetContext(ctx * gin.Context) {
+func (ctrl GinController) SetContext(ctx * gin.Context) {
 	ctrl.Ctx = ctx
 }
 
-type Binder interface {
-	GetRawRequest() *http.Request
-	RenderJson(code int, obj interface{})
+type GinContextHandler struct {
+	controller sav.Controller
 }
 
-type GinBinder struct {
-	controller IController
+func NewGinContextHandler(controller sav.Controller) sav.ContextHandler {
+	return &GinContextHandler{controller: controller}
 }
 
-func NewGinBinder(controller IController) Binder {
-	return &GinBinder{controller: controller}
+func (ctx GinContextHandler) GetRawRequest() *http.Request {
+	return ctx.controller.GetContext().(*GinController).Ctx.Request
 }
 
-func (ctx GinBinder) GetRawRequest() *http.Request {
-	return ctx.controller.GetContext().(*Controller).Ctx.Request
+func (ctx GinContextHandler) RenderJson(code int, obj interface{}) {
+	ctx.controller.GetContext().(*GinController).Ctx.JSON(code, obj)
 }
 
-func (ctx GinBinder) RenderJson(code int, obj interface{}) {
-	ctx.controller.GetContext().(*Controller).Ctx.JSON(code, obj)
-}
-
-type GinBindFunc func(c * gin.Context) Binder
+type GinBindFunc func(c * gin.Context) sav.Controller
 
 type GinApplication struct {
 	Engine * gin.Engine
 	binder GinBindFunc
+	contract sav.Contract
 }
 
-func (ctx GinApplication) Handle(g *gin.Context) {
-	ctx.binder(g)
+func (ctx GinApplication) MakeHandle(handler RouteActionHandler, factory *sav.ActionHandler) func(g *gin.Context) {
+	return func(g *gin.Context) {
+		controller := ctx.binder(g)
+		dataHandler := factory.Create()
+		handler(controller, dataHandler)
+	}
 }
 
-type RouteActionHandler func (ctrl IController, handler sav.DataHandler)
+type RouteActionHandler func (ctrl sav.Controller, handler sav.DataHandler)
 
-func (ctx GinApplication) GET(path string, handler RouteActionHandler) {
-	//ctx.Engine.GET(path, ctx.MakeHandle())
+func (ctx GinApplication) GET(path string, modal, action string, handler RouteActionHandler) {
+	ctx.Engine.GET(path, ctx.MakeHandle(handler, ctx.contract.GetModal(modal).GetAction(action).GetHandler()))
 }
 
 func NewGinApplication (engine *gin.Engine, binder GinBindFunc) GinApplication{

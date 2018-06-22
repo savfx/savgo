@@ -7,7 +7,7 @@ import (
 
 func TestBaseContract(t *testing.T) {
 	expect := expect.New(t)
-	ctx := NewBaseContract(nil, "project")
+	ctx := NewBaseContract(nil, "project", map[string]interface{}{})
 	ctx.DefineModal("Account", map[string]ActionHandler{
 		"Login":    {},
 		"Register": {},
