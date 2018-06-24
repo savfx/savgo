@@ -5,15 +5,17 @@ import (
 	"fmt"
 	"github.com/a8m/expect"
 	"testing"
+	"net/url"
 )
 
 func TestEncode(t *testing.T) {
 	expect := expect.New(t)
 	expect(Encode(map[string]interface{}{})).To.Equal("")
 	expect(Encode(nil)).To.Equal("")
-	var x string = "ss"
-	var n uint8 = 20
-	expect(Encode(map[string]interface{}{"x": &x, "n": &n})).To.Equal(`x=ss&n=20`)
+	x := "ss"
+	n := 20
+	expect(Encode(map[string]interface{}{"x": &x})).To.Equal(`x=ss`)
+	expect(Encode(map[string]interface{}{"n": &n})).To.Equal(`n=20`)
 
 	// expect(Encode(map[string]interface{}{
 	// 	"a": []interface{}{
@@ -77,6 +79,14 @@ func TestEncode2(t *testing.T) {
 	jsonObject := map[string]interface{}{}
 	json.Unmarshal([]byte(text), &jsonObject)
 	value := Encode(jsonObject)
+	str := "name=jetiny&ages[]=1&ages[]=2&ages[]=3&followers[0][name]=san&followers[0][age]=10&followers[1][name]=si&followers[1][age]=10&followers[2][name]=wu&followers[2][age]=10"
 	fmt.Println()
-	expect(value).To.Equal("name=jetiny&ages[]=1&ages[]=2&ages[]=3&followers[0][name]=san&followers[0][age]=10&followers[1][name]=si&followers[1][age]=10&followers[2][name]=wu&followers[2][age]=10")
+	v1,_ := url.ParseQuery(str)
+	v2,_ := url.ParseQuery(value)
+	fmt.Println()
+	t1, _ := json.Marshal(v1)
+	t2, _ := json.Marshal(v2)
+
+	fmt.Println()
+	expect(t1).To.Equal(t2)
 }
