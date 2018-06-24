@@ -3,7 +3,6 @@ package sav
 import (
 	"github.com/savfx/savgo/router"
 	"github.com/savfx/savgo/util/convert"
-	"net/http"
 )
 
 type DataSource interface {
@@ -20,6 +19,7 @@ type DataHandler interface {
 	SetInputValue(value interface{})
 	SetOutputValue(value interface{})
 	GetParams() map[string]interface{}
+	SetParams(data map[string]interface{})
 	ParseInput(ds DataSource)
 	ParseOutput(ds DataSource)
 }
@@ -70,11 +70,6 @@ type Application interface {
 	Fetch(action Action, handler DataHandler) (Response, error)
 }
 
-type Controller interface {
-	GetContext() interface{}
-}
+type Controller interface {}
 
-type ContextHandler interface {
-	GetRawRequest() *http.Request
-	RenderJson(code int, obj interface{})
-}
+type RouteActionHandler func (ctx interface{}, ctrl Controller, handler DataHandler)

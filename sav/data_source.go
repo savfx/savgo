@@ -43,7 +43,7 @@ func NewFormDataSource(values map[string][]string) *BaseDataSource {
 }
 
 func (ctx BaseDataSource) IsForm() bool {
-	return ctx.FormArray != nil && ctx.FormObject != nil
+	return ctx.FormArray != nil || ctx.FormObject != nil
 }
 
 func (ctx BaseDataSource) GetFormObject() *convert.FormObject {
@@ -68,4 +68,8 @@ type BaseDataHandler struct {
 
 func (ctx BaseDataHandler) GetParams() map[string]interface{} {
 	return ctx.Params
+}
+
+func (ctx * BaseDataHandler) SetParams(data map[string]interface{}){
+	ctx.Params = data
 }

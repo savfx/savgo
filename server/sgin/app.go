@@ -2,64 +2,62 @@ package sgin
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"github.com/savfx/savgo/sav"
+	"github.com/savfx/savgo/router"
+	"strings"
+	"encoding/json"
 )
 
-type GinController struct {
-	Ctx *gin.Context
-}
-
-func (ctrl GinController) GetContext() interface{} {
-	return ctrl.Ctx
-}
-
-func (ctrl GinController) SetContext(ctx * gin.Context) {
-	ctrl.Ctx = ctx
-}
-
-type GinContextHandler struct {
-	controller sav.Controller
-}
-
-func NewGinContextHandler(controller sav.Controller) sav.ContextHandler {
-	return &GinContextHandler{controller: controller}
-}
-
-func (ctx GinContextHandler) GetRawRequest() *http.Request {
-	return ctx.controller.GetContext().(*GinController).Ctx.Request
-}
-
-func (ctx GinContextHandler) RenderJson(code int, obj interface{}) {
-	ctx.controller.GetContext().(*GinController).Ctx.JSON(code, obj)
-}
-
-type GinBindFunc func(c * gin.Context) sav.Controller
+type ControllerFactory func(c * gin.Context) sav.Controller
 
 type GinApplication struct {
-	Engine * gin.Engine
-	binder GinBindFunc
+	engine * gin.Engine
+	factory ControllerFactory
 	contract sav.Contract
 }
 
-func (ctx GinApplication) MakeHandle(handler RouteActionHandler, factory *sav.ActionHandler) func(g *gin.Context) {
+func (ctx GinApplication) MakeHandle(handler sav.RouteActionHandler, factory *sav.ActionHandler) func(g *gin.Context) {
 	return func(g *gin.Context) {
-		controller := ctx.binder(g)
+		controller := ctx.factory(g)
 		dataHandler := factory.Create()
-		handler(controller, dataHandler)
+		g.Request.ParseForm()
+		formData := g.Request.PostForm
+		if formData != nil && len(formData) > 0 {
+			dataHandler.ParseInput(sav.NewFormDataSource(formData))
+		} else {
+			data, err := g.GetRawData()
+			if err == nil {
+				dataHandler.ParseInput(sav.NewJsonDataSource(data, json.Unmarshal))
+			}
+		}
+		params := make(map[string]interface{})
+		for _, param := range g.Params {
+			params[param.Key] = param.Value
+		}
+		dataHandler.SetParams(params)
+		handler(g, controller, dataHandler)
+		data := dataHandler.GetOutputValue()
+		if data != nil {
+			g.JSON(200, data)
+		}
 	}
 }
 
-type RouteActionHandler func (ctrl sav.Controller, handler sav.DataHandler)
-
-func (ctx GinApplication) GET(path string, modal, action string, handler RouteActionHandler) {
-	ctx.Engine.GET(path, ctx.MakeHandle(handler, ctx.contract.GetModal(modal).GetAction(action).GetHandler()))
+func (ctx GinApplication) Handle(modal, action string, handler sav.RouteActionHandler) {
+	r := ctx.contract.GetRouter()
+	route := r.GetActionRoute(modal + action)
+	rawPath := r.GetPrefix() + route.Path
+	path := strings.Replace(rawPath, "?", "", -1)
+	ctx.engine.Handle(router.MethodToString[route.Method], path,
+		ctx.MakeHandle(handler,
+			ctx.contract.GetModal(modal).GetAction(action).GetHandler()))
 }
 
-func NewGinApplication (engine *gin.Engine, binder GinBindFunc) GinApplication{
+func NewGinApplication (contract sav.Contract, engine *gin.Engine, factory ControllerFactory) GinApplication{
 	res := GinApplication{
-		Engine: engine,
-		binder: binder,
+		engine: engine,
+		factory: factory,
+		contract: contract,
 	}
 	return res
 }
