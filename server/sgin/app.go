@@ -16,6 +16,25 @@ type GinApplication struct {
 	contract sav.Contract
 }
 
+type GinContext struct {
+	c * gin.Context
+	h sav.DataHandler
+	done bool
+}
+
+func (ctx * GinContext) Accept (data interface{}) {
+	ctx.done = true
+	if data != nil {
+		ctx.h.SetOutputValue(data)
+		ctx.c.JSON(200, ctx.h.GetOutputValue())
+	}
+}
+
+func (ctx * GinContext) Reject(code int, object interface{}) {
+	ctx.done = true
+	ctx.c.JSON(code, object)
+}
+
 func (ctx GinApplication) MakeHandle(handler sav.RouteActionHandler, factory *sav.ActionHandler) func(g *gin.Context) {
 	return func(g *gin.Context) {
 		controller := ctx.factory(g)
@@ -35,10 +54,13 @@ func (ctx GinApplication) MakeHandle(handler sav.RouteActionHandler, factory *sa
 			params[param.Key] = param.Value
 		}
 		dataHandler.SetParams(params)
-		handler(g, controller, dataHandler)
-		data := dataHandler.GetOutputValue()
-		if data != nil {
-			g.JSON(200, data)
+		gc := &GinContext{
+			c: g,
+			h: dataHandler,
+		}
+		handler(g, controller, dataHandler, gc)
+		if gc.done == false {
+			gc.Accept(dataHandler.GetOutputValue())
 		}
 	}
 }

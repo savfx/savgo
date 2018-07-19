@@ -72,4 +72,4 @@ type Application interface {
 
 type Controller interface {}
 
-type RouteActionHandler func (ctx interface{}, ctrl Controller, handler DataHandler)
+type RouteActionHandler func (ctx interface{}, ctrl Controller, handler DataHandler, extra interface{})
