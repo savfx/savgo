@@ -13,7 +13,7 @@ func TestObject(t *testing.T) {
     "age": "35",
     "man": "true",
     "profile": {
-       "company": "hfjy"
+       "company": "test"
     },
     "followers": [
       {"name": "张三", "age": 10},
