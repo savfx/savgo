@@ -17,7 +17,7 @@ func TestForm(t *testing.T) {
 	  "age": "35",
 	  "man": "true",
 	  "profile": {
-	     "company": "hfjy",
+	     "company": "test",
 	     "sex": "female",
 	      "xxx": {
 	      	"bb": "cc"
